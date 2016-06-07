@@ -59,6 +59,17 @@ d3.json("/authors/{{idx}}.treejson", function(error, root) {
   node.append("circle")
       .attr("r", 4.5);
 
+    node.append("a")
+        .attr("xlink:href", function(d) {return "/authors/" + d.idx})
+        .append("circle")
+        .style("fill", function(d) {
+            if(d.idx == {{idx}}) {
+                return "blue";
+            } else {
+                return "green";
+            }})
+        .attr("r","6");
+
   node.append("text")
       .attr("dy", ".31em")
       .attr("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
