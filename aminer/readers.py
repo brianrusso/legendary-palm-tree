@@ -88,7 +88,7 @@ class AuthorReader(object):
         try:
             while True:  # bad style? meh...
                 author = self.get_record()
-                authors[author.author_idx] = author
+                authors[author.author_idx] = author.as_dict()
         except EOFError:
             pass
         return authors
