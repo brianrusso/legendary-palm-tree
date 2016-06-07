@@ -70,3 +70,6 @@ json.dump(subgraph_json, out)
 #Miguel R. Visbal (835823)
 # Let's look at Yongcan Cao.. interested in AUVs, cyber, sensors, etc..
 # degrees from Nanjing University of Aeronautics & Astronautics & Shanghai Jiao Tong University
+
+# stuff for bfs
+#foo = nx.subgraph(G, nx.algorithms.bfs_successors(G, 0))  # 0 is root

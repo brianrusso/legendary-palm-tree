@@ -1,11 +1,16 @@
 from flask import Flask, render_template
-from networkx.readwrite import json_graph
+
 import networkx as nx
 import json
 import pickle
+from aminer.util import get_attached_subgraph, graph_to_d3tree_json, \
+    graph_to_d3nodelink_json, mst_from_graph, bfs_from_tree, neighborhood, \
+    deep_subgraph
 
 app = Flask(__name__)
 
+# FIXME: this is a hack for demo purposes
+# TODO - Move data into graph database
 app.G = pickle.load(open('littleG.pickle'))
 
 
@@ -17,16 +22,32 @@ def index():
 def get_authors():
     return render_template('nodes.html', nodes=app.G.nodes())
 
-@app.route('/authors/<idx>.json')
-def get_neighbors_json(idx):
-    _subgraph = nx.Graph(nx.subgraph(app.G, app.G[int(idx)]))
-    d3js = json_graph.node_link_data(_subgraph)
-    return json.dumps(d3js)
-    #record = app.G.node[int(idx)]
 
-@app.route('/authors/<idx>.d3')
-def get_neighbors_d3(idx):
-    return render_template('node_graph.html', idx=int(idx))
+@app.route('/authors/<idx>.nodejson')
+def get_neighbors_nodejson(idx):
+    subgraph = get_attached_subgraph(app.G, int(idx))
+    return graph_to_d3nodelink_json(subgraph)
+
+@app.route('/authors/<idx>.treejson')
+def get_neighbors_treejson(idx):
+    #subgraph = get_attached_subgraph(app.G, int(idx))
+    subgraph = deep_subgraph(app.G, neighborhood(app.G, int(idx), 2))
+    # Convert to tree
+    tree = nx.bfs_tree(subgraph, int(idx))
+    # populate attributes
+    for index in tree.nodes():
+        tree.node[index] = app.G.node[index]
+    return graph_to_d3tree_json(tree, int(idx))
+
+
+@app.route('/authors/<idx>.d3force')
+def get_neighbors_d3force(idx):
+    return render_template('node_forcegraph.html', idx=int(idx))
+
+@app.route('/authors/<idx>.d3tree')
+def get_neighbors_d3tree(idx):
+    return render_template('node_radialtree.html', idx=int(idx))
+
 
 
 @app.route('/authors/<idx>')
@@ -39,4 +60,4 @@ def get_author(idx):
 
 if __name__ == '__main__':
     app.debug=True
-    app.run(host='192.168.1.200', port=8000)
+    app.run(host='0.0.0.0', port=8000)

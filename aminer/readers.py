@@ -45,22 +45,22 @@ class AuthorReader(object):
             author_idx = int(self.id_pattern.findall(self.fd.readline())[0].strip())
         except IndexError:
             raise EOFError
-        author_name = self.name_pattern.findall(self.fd.readline())[0].strip()
-        affiliation = self.affiliation_pattern.findall(self.fd.readline())[0].strip()
+        author_name = unicode(self.name_pattern.findall(self.fd.readline())[0].strip())
+        affiliation = unicode(self.affiliation_pattern.findall(self.fd.readline())[0].strip())
         line = self.fd.readline()
         # it matches the PC pattern..
         if self.published_count_pattern.match(line):
             # stuff it into PC
             published_count = int(self.published_count_pattern.findall(line)[0].strip())
         else:  # probably an errant continuation of affiliation
-            affiliation = affiliation + line  # so concatenate it to existing affiliation line
+            affiliation = affiliation + unicode(line)  # so concatenate it to existing affiliation line
             # and then read in the next line as published_count
             published_count = int(self.published_count_pattern.findall(self.fd.readline())[0].strip())
         citation_count = int(self.citations_pattern.findall(self.fd.readline())[0].strip())
         hindex = self.hindex_pattern.findall(self.fd.readline())[0].strip()
         pindex = self.pindex_pattern.findall(self.fd.readline())[0].strip()
         upindex = self.upindex_pattern.findall(self.fd.readline())[0].strip()
-        terms = self.terms_pattern.findall(self.fd.readline())[0].strip()
+        terms = unicode(self.terms_pattern.findall(self.fd.readline())[0].strip())
         line = self.fd.readline()
         # there's an error in like 8181450 where a term list spans 2 lines
         if line.strip():
