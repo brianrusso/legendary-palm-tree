@@ -40,7 +40,33 @@ json.dump(subgraph_json, out)
 # mehrdad = nx.shortest_path(G, 1679207).keys()
 # len(mehrdad)
 # 1057194 .. wow!
-# china_nodes = nodes_by_affil(G, "China")
 
-wp = nodes_by_affil(G, "Wright Patterson")
-wp = wp + nodes_by_affil(G, "WrightPatterson")
+
+# Find all nodes that mention Wright Patterson
+#wp = nodes_by_affil(G, "Wright Patterson")
+#wp = wp + nodes_by_affil(G, "WrightPatterson")
+#len(wp) => 503
+# Find all nodes that mention China
+# china_nodes = nodes_by_affil(G, "China")
+# Get all their neighbors
+#china_neighbors1 = neighborhood_of_list(G, china_nodes, 1)
+# Intersection of China + Wright Patt mentions
+#china_neighbors_1.intersection(wp)
+#len(china_neighbors_1) =>197342
+#{115124, 165609, 209039, 267800, 548278, 715779, 780207, 800548, 835823, 1151035, 1372721, 1655824, 1673968}
+# These guys..
+# Guna Seetharaman (1673968)
+#Richard K. Martin (715779)
+#Yongcan Cao (800548)
+#John L. Fleming (165609)
+#Kyle A. Novak (209039)
+#Eswar Josyula (1655824)
+#Jonathan T. Goldstein (1372721)
+#Daniel W. Repperger (115124)
+#A H Klopf (548278)
+#X.-G. Xia (267800)
+#Matthew Fickus (1151035)
+#Aihua W. Wood (780207)
+#Miguel R. Visbal (835823)
+# Let's look at Yongcan Cao.. interested in AUVs, cyber, sensors, etc..
+# degrees from Nanjing University of Aeronautics & Astronautics & Shanghai Jiao Tong University

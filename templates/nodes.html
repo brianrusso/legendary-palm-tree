@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <title>Title</title>
+</head>
+<body>
+    <div class="container">
+        <p>List of nodes..</p>
+        <ul>
+            {% for n in nodes %}
+            <li><a href="/authors/{{n}}">{{n}}</a></li>
+            {% endfor %}
+        </ul>
+
+    </div>
+
+</body>
+</html>

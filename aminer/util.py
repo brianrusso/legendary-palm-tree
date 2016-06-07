@@ -39,7 +39,7 @@ def neighborhood(graph, node_id, distance):
             results = results.union(new_set)
         return results
 
-
+# Be careful with distance ! Can get really big
 def neighborhood_of_list(graph, nodes, distance):
     results = set()
     for node in nodes:
