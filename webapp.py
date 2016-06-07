@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-
+from flask import request
 import networkx as nx
 import json
 import pickle
@@ -31,7 +31,7 @@ def get_neighbors_nodejson(idx):
 @app.route('/authors/<idx>.treejson')
 def get_neighbors_treejson(idx):
     #subgraph = get_attached_subgraph(app.G, int(idx))
-    subgraph = deep_subgraph(app.G, neighborhood(app.G, int(idx), 2))
+    subgraph = deep_subgraph(app.G, neighborhood(app.G, int(idx), 3))
     # Convert to tree
     tree = nx.bfs_tree(subgraph, int(idx))
     # populate attributes
