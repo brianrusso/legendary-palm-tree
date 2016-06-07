@@ -1,49 +1,27 @@
-import networkx as nx
+
 import re, csv
 from collections import defaultdict
-
-class Author(object):
-
-    def __init__(self, author_idx, name, affiliation, pc, cc, hindex, pindex, upindex, terms):
-        self.author_idx = author_idx
-        self.name = name
-        self.affiliation = affiliation
-        self.pc = pc  # published count (number of articles)
-        self.cc = cc  # citation count
-        self.hindex = hindex
-        self.pindex = pindex
-        self.upindex = upindex
-        self.terms = terms  # list of topics
-
-
-class Paper(object):
-
-    def __init__(self, paper_idx, title, authors, affiliation, year, venue, refs, abstract):
-        self.paper_idx = paper_idx
-        self.title = title
-        self.authors = authors
-        self.affiliation = affiliation
-        self.year = int(year) if year else None
-        self.venue = venue
-        self.refs = refs
-        self.abstract = abstract if abstract else None
+from model import Author, Paper
 
 
 class CoAuthorReader(object):
 
-    links = defaultdict(list)
+    filename = None
 
     def __init__(self, filename):
-        with open(filename,'r') as tsv:
-            tsv = csv.reader(tsv, delimiter='\t')
-            for line in tsv:
-                author_a = line[0][1:]
-                author_b = line[1]
-                collabs = line[2]
-                self.links[int(author_a)].append((int(author_b), int(collabs)))
+        self.filename = filename
 
     def get_records(self):
-        return self.links
+        links = defaultdict(list)
+        # format is '#<authora_idx>\t<authorb_idx>\t<collabs>' per line
+        with open(self.filename,'r') as tsv:
+            tsv = csv.reader(tsv, delimiter='\t')
+            for line in tsv:
+                author_a = line[0][1:]  # trim leading '#'
+                author_b = line[1]
+                collabs = line[2]
+                links[int(author_a)].append((int(author_b), int(collabs)))
+        return links
 
 
 class AuthorReader(object):
