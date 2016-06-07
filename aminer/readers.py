@@ -51,12 +51,12 @@ class AuthorReader(object):
         # it matches the PC pattern..
         if self.published_count_pattern.match(line):
             # stuff it into PC
-            published_count = self.published_count_pattern.findall(line)[0].strip()
+            published_count = int(self.published_count_pattern.findall(line)[0].strip())
         else:  # probably an errant continuation of affiliation
             affiliation = affiliation + line  # so concatenate it to existing affiliation line
             # and then read in the next line as published_count
-            published_count = self.published_count_pattern.findall(self.fd.readline())[0].strip()
-        citation_count = self.citations_pattern.findall(self.fd.readline())[0].strip()
+            published_count = int(self.published_count_pattern.findall(self.fd.readline())[0].strip())
+        citation_count = int(self.citations_pattern.findall(self.fd.readline())[0].strip())
         hindex = self.hindex_pattern.findall(self.fd.readline())[0].strip()
         pindex = self.pindex_pattern.findall(self.fd.readline())[0].strip()
         upindex = self.upindex_pattern.findall(self.fd.readline())[0].strip()
