@@ -1,3 +1,13 @@
+import uuid
+
+
+class Tech(object):
+    nodes = {}
+
+    def __init__(self, name):
+        self.name = name
+
+
 class Author(object):
 
     def __init__(self, author_idx, name, affiliation, pc, cc, hindex, pindex, upindex, terms):

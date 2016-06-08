@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <title>Legendary Palm Tree</title>
+</head>
+<body>
+<div class="jumbotron">
+    <img src="/static/palm-tree.png">
+    <h1>"{{tech_name}}" associated with</h1>
+    <ul>
+        {% for n in nodes|sort() %}
+        <li><A href="/authors/{{n}}">{{n}}</A></li>
+        {% endfor %}
+    </ul>
+</div>
+
+</body>
+</html>

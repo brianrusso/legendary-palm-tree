@@ -1,7 +1,8 @@
 import networkx as nx
-import json
+import json, uuid, operator
 from networkx.readwrite import json_graph
-
+from collections import defaultdict, OrderedDict
+from aminer.model import Tech
 
 def nodes_by_attr(graph, attr_name, attr_val):
     nodes = list()
@@ -14,7 +15,7 @@ def nodes_by_attr(graph, attr_name, attr_val):
 def nodes_by_affil(graph, term):
     nodes = list()
     for (p, d) in graph.nodes(data=True):
-        if term in d['affil']:
+        if term in unicode(d['affil'],'utf-8'):
             nodes.append(p)
     return nodes
 
@@ -75,6 +76,26 @@ def neighborhood(graph, node_id, distance):
             new_set = neighborhood(graph, neighbor, distance-1)
             results = results.union(new_set)
         return results
+
+# Dict of tech labels, values are tuple of label + set of nodes
+# we use uuids because strings are lame
+def build_tech_index(graph):
+    labels = defaultdict(list)
+    # for each node in graph
+    for n, d in graph.nodes_iter(data=True):
+        # for each tech term in this node
+        for tech_term in d['terms']:
+            # place the node id in the dict with tech as key
+            # lower case
+            tech_term = str(tech_term.lower())
+            guid = uuid.uuid3(uuid.NAMESPACE_URL, tech_term).hex
+            # add this node to its tech term
+            try:
+                labels[guid][1].update({n})
+            except:
+                labels[guid] = (tech_term, {n})
+    return labels
+    #return OrderedDict(sorted(labels.items(), key=operator.itemgetter(0)))
 
 
 # Be careful with distance ! Can get really big
