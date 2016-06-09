@@ -45,8 +45,8 @@ class AuthorReader(object):
             author_idx = int(self.id_pattern.findall(self.fd.readline())[0].strip())
         except IndexError:
             raise EOFError
-        author_name = unicode(self.name_pattern.findall(self.fd.readline())[0].strip())
-        affiliation = unicode(self.affiliation_pattern.findall(self.fd.readline())[0].strip())
+        author_name = unicode(self.name_pattern.findall(self.fd.readline())[0].strip(), 'utf-8')
+        affiliation = unicode(self.affiliation_pattern.findall(self.fd.readline())[0].strip(), 'utf-8')
         line = self.fd.readline()
         # it matches the PC pattern..
         if self.published_count_pattern.match(line):
@@ -60,7 +60,7 @@ class AuthorReader(object):
         hindex = self.hindex_pattern.findall(self.fd.readline())[0].strip()
         pindex = self.pindex_pattern.findall(self.fd.readline())[0].strip()
         upindex = self.upindex_pattern.findall(self.fd.readline())[0].strip()
-        terms = unicode(self.terms_pattern.findall(self.fd.readline())[0].strip())
+        terms = unicode(self.terms_pattern.findall(self.fd.readline())[0].strip(), 'utf-8')
         line = self.fd.readline()
         # there's an error in like 8181450 where a term list spans 2 lines
         if line.strip():

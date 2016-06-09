@@ -4,13 +4,13 @@ from networkx.readwrite import json_graph
 from collections import defaultdict, OrderedDict
 from aminer.model import Tech
 
+
 def nodes_by_attr(graph, attr_name, attr_val):
     nodes = list()
     for (p, d) in graph.nodes(data=True):
         if d[attr_name] == attr_val:
             nodes.append(p)
     return nodes
-
 
 def nodes_by_affil(graph, term):
     nodes = list()
@@ -104,3 +104,4 @@ def neighborhood_of_list(graph, nodes, distance):
     for node in nodes:
         results = results.union(neighborhood(graph, node, distance))
     return results
+

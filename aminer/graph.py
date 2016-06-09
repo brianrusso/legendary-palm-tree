@@ -1,4 +1,6 @@
 import networkx as nx
+from readers import AuthorReader, CoAuthorReader
+
 
 def make_aminer_graph(authors, coauthor_relations):
     g = nx.Graph()
@@ -20,3 +22,12 @@ def add_coauthor_relations(graph, coauthor_relations):
             #author_a_node = self.G[rel[0]]
             graph.add_edge(author, rel[0], weight=rel[1])
     return graph
+
+
+def setup_graph(author_file, coauthor_file):
+    author_reader = AuthorReader(author_file)
+    coauthor_reader = CoAuthorReader(coauthor_file)
+    authors = author_reader.get_records()
+    coauthor_relations = coauthor_reader.get_records()
+    g = make_aminer_graph(authors, coauthor_relations)
+    return g

@@ -3,6 +3,7 @@ from flask import request
 import networkx as nx
 import json
 import pickle
+from aminer.graph import setup_graph
 from aminer.util import get_attached_subgraph, graph_to_d3tree_json, \
     graph_to_d3nodelink_json, mst_from_graph, bfs_from_tree, neighborhood, \
     deep_subgraph, build_tech_index, nodes_by_affil
@@ -13,7 +14,11 @@ app = Flask(__name__)
 
 # FIXME: this is a hack for demo purposes
 # TODO - Move data into graph database
-app.G = pickle.load(open('littleG.pickle'))
+AUTHOR_FILE = "/brokenwillow/AMiner/AMiner-Author.txt"
+COAUTHOR_FILE = "/brokenwillow/AMiner/AMiner-Coauthor.txt"
+
+#app.G = setup_graph(AUTHOR_FILE, COAUTHOR_FILE)
+app.G = pickle.load(open('aminer.pickle'))
 app.tech_index = build_tech_index(app.G)
 
 
@@ -26,9 +31,6 @@ def index():
 def get_techs():
     return render_template('tech_list.html', tech=app.tech_index)
 
-@app.route('/affils')
-def get_affils():
-    return str(app.affil_index)
 
 @app.route('/tech/<tech_guid>')
 def get_tech(tech_guid):
