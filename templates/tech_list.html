@@ -106,7 +106,7 @@ input:focus {
     <div id="tech-list">
         <input class="search" placeholder="Search" />
         <ul class="list">
-            {% for item in tech %}
+            {% for item in tech|dictsort(by='value')%}
             <li><p class="tech"><A href="/tech/{{item[0]}}">{{item[1][0]}}</A></p></li>
             {% endfor %}
         </ul>
