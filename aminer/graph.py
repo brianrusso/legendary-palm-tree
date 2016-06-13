@@ -1,5 +1,7 @@
 import networkx as nx
-from readers import AuthorReader, CoAuthorReader
+from aminer.readers import AuthorReader, CoAuthorReader
+
+from arango import Arango
 
 
 def make_aminer_graph(authors, coauthor_relations):
@@ -23,11 +25,49 @@ def add_coauthor_relations(graph, coauthor_relations):
             graph.add_edge(author, rel[0], weight=rel[1])
     return graph
 
-
-def setup_graph(author_file, coauthor_file):
+def get_author_coauthors(author_file, coauthor_file):
     author_reader = AuthorReader(author_file)
     coauthor_reader = CoAuthorReader(coauthor_file)
     authors = author_reader.get_records()
     coauthor_relations = coauthor_reader.get_records()
+    return (authors, coauthor_relations)
+
+
+def setup_graph(author_file, coauthor_file):
+    authors, coauthor_relations = get_author_coauthors(author_file, coauthor_file)
     g = make_aminer_graph(authors, coauthor_relations)
     return g
+
+# python-arango version
+def load_into_arango(author_file, coauthor_file):
+    authors, coauthor_relations = get_author_coauthors(author_file, coauthor_file)
+
+    a = Arango(host="localhost", port=8529)
+    try:
+        db = a.create_database("aminer")
+    except:
+        db = a.database("aminer")
+
+    try:
+        graph = db.create_graph("aminer_coauthors")
+    except:
+        graph = db.graph("aminer_coauthors")
+
+    try:
+        db.create_collection("authors")
+        graph.create_vertex_collection("authors")
+        db.create_collection("coauthors", is_edge=True)
+        graph.create_edge_definition(edge_collection="coauthors",
+                                from_vertex_collections=["authors"],
+                                 to_vertex_collections=["authors"])
+    except:
+        pass
+
+    for key in authors:
+        graph.create_vertex("authors", authors[key])
+    for author in coauthor_relations.keys():
+        for rel in coauthor_relations[author]:
+            graph.create_edge("coauthors", {"_from": "authors/" + unicode(author),
+                                            "_to": "authors/"+ unicode(rel[0]),
+                                            "w": rel[1]})
+

@@ -23,8 +23,8 @@ class Author(object):
 
     def as_dict(self):
         output = dict()
-        output['_type'] = "A"
-        output['idx'] = self.author_idx
+        #output['_type'] = "A"
+        output['_key'] = unicode(self.author_idx)
         output['name'] = self.name
         output['affil'] = self.affiliation
         output['pc'] = self.pc
