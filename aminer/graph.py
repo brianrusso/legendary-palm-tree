@@ -1,6 +1,6 @@
 import networkx as nx
 from aminer.readers import AuthorReader, CoAuthorReader
-
+import logging
 from arango import Arango
 
 
@@ -39,12 +39,16 @@ def setup_graph(author_file, coauthor_file):
     return g
 
 # python-arango version
-def load_into_arango(author_file, coauthor_file):
-    authors, coauthor_relations = get_author_coauthors(author_file, coauthor_file)
-
-    a = Arango(host="localhost", port=8529)
+def load_into_arango(author_file="/media/sf_Data/AMiner/AMiner-Author.txt", coauthor_file="/media/sf_Data/AMiner/AMiner-Coauthor.txt"):
+    print "Connecting to arango"
+    a = Arango(host="localhost", port=8529, username='root', password='joker')
     try:
-        db = a.create_database("aminer")
+        user_info = dict()
+        user_info['username'] = 'root'
+        user_info['passwd'] = 'joker'
+        user_info['active'] = True
+        db = a.create_database("aminer", users=[user_info])
+
     except:
         db = a.database("aminer")
 
@@ -63,11 +67,17 @@ def load_into_arango(author_file, coauthor_file):
     except:
         pass
 
+    print "Reading AMiner Data"
+    authors, coauthor_relations = get_author_coauthors(author_file, coauthor_file)
+
+    print "Loading authors into arango"
     for key in authors:
         graph.create_vertex("authors", authors[key])
+    print "Building coauthor relations"
     for author in coauthor_relations.keys():
         for rel in coauthor_relations[author]:
             graph.create_edge("coauthors", {"_from": "authors/" + unicode(author),
                                             "_to": "authors/"+ unicode(rel[0]),
                                             "w": rel[1]})
 
+# In [30]: foo = db.execute_query("FOR doc in authors FILTER 'case study' IN doc.terms[*] RETURN doc")

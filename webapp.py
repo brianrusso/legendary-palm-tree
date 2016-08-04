@@ -18,7 +18,7 @@ AUTHOR_FILE = "/brokenwillow/AMiner/AMiner-Author.txt"
 COAUTHOR_FILE = "/brokenwillow/AMiner/AMiner-Coauthor.txt"
 
 #app.G = setup_graph(AUTHOR_FILE, COAUTHOR_FILE)
-app.G = pickle.load(open('aminer.pickle'))
+app.G = pickle.load(open('littleG.pickle'))
 app.tech_index = build_tech_index(app.G)
 
 
